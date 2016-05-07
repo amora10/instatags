@@ -99,16 +99,13 @@ def mostFrequent(tag, steps):
 
       # Extract tags from previous layer
       counter = combineTags(imagesets[layer-1])
-      tags = counter.most_common(21)[1:]
-      print tags
+      tags = counter.most_common(20)
 
       # Search for new images with 20 most frequent tags
       i = 0
       for tag in tags:
          i += 1
-         print i
-         time.sleep(1)
-         newimages = getMedia(tag)
+         newimages = getMedia(tag[0])
 
          # Add new images to current layer, if not in masterset
          for key in newimages:       
@@ -120,11 +117,45 @@ def mostFrequent(tag, steps):
    return imagesets
 
 
-
-
 # Take tags that contain original tag
-def tagIncluded(tag):
-   pass
+def tagIncluded(tag, steps):
+   masterset = dict()
+   imagesets = [dict()] * (steps+1)
+
+   layer = 0
+   masterset = getMedia(tag)
+   imagesets[0] = copy.deepcopy(masterset)
+
+   while layer < steps:
+      layer += 1
+      thislayer = dict()
+
+      # Extract tags from previous layer
+      counter = combineTags(imagesets[layer-1])
+      counter = dict(counter)
+      newtags = []
+      for key in counter:
+         if str(tag) in str(key):
+            print key
+            newtags.append(key)
+
+      # Search for new images with subset of those tags
+      i = 0
+      for tag in newtags:
+         i += 1
+         print i
+         if i>20:
+            break
+         newimages = getMedia(tag)
+
+         # Add new images to current layer, if not in masterset
+         for key in newimages:       
+            if key not in masterset:
+               masterset[key] = newimages[key]
+               thislayer[key] = newimages[key]
+
+      imagesets[layer] = thislayer
+   return imagesets
 
 def printImages(images, count):
    c = 0
@@ -141,7 +172,7 @@ def main(argv):
       #printImages(images, 3)
       #counts = combineTags(images)
       layers = 3
-      imagesets = mostFrequent(query, layers)
+      imagesets = tagIncluded(query, layers)
       i = 0
       while i <= layers:
          print i
