@@ -22,33 +22,33 @@ def start_page():
 @app.route('/insertTag', methods=['POST'])
 def insert():
    if request.method == 'POST':
-      global tag, zero_pics, one_pics, two_pics
+      global tag, imageSets, image_queue, totLayer
       tag = request.form['tag']
-      totLayer = request.form['layer']
-      tag = text
-      zero_pics = 0
-      one_pics = 0
-      two_pics = 0
+      totLayer = int(request.form['layer'])
+      func = request.form["func"]
+      if func == 'Random Expand':
+         imageSets = utils.fullExpand(tag, totLayer)
+      elif func == 'Most Frequent':
+         imageSets = utils.mostFrequent(tag, totLayer)
+      else:
+         imageSets = utils.tagIncluded(tag, totLayer)
+      image_queue = utils.getUrls(imageSets[currLayer])
    return redirect("/pics")
 
 @app.route('/pics')
 def pics():
-   global image_queue, imageSets
-   if imageSets == None:
-      imageSets = utils.fullExpand(tag, totLayer)
-      image_queue = utils.getUrls(imageSets[currLayer])
-   if image_queue == None:
+   global image_queue
+   if len(image_queue) == 0:
       return redirect("/results")
    pic = image_queue.pop()
-   print(pic, file=sys.stderr)
-   return render_template('rate_pics.html', tag=tag, pic=pic)
+   return render_template('rate_pics.html', tag=tag, pic=pic, 
+      layer=currLayer, left=len(image_queue))
 
 @app.route('/rate', methods=['GET', 'POST'])
 def rate():
    global zero_pics, one_pics, two_pics
    if request.method == 'POST':
       value = request.form["rate"]
-      print(value, file=sys.stderr)
       if value == '0':
          zero_pics += 1
       elif value == '1':
@@ -59,19 +59,20 @@ def rate():
 
 @app.route('/results')
 def results():
-   return render_template('results.html', zero=zero_pics, one=one_pics, two=two_pics)
+   return render_template('results.html', zero=zero_pics, one=one_pics, 
+      two=two_pics, layer=currLayer)
 
 @app.route('/finished')
 def finished():
-   global zero_pics, one_pics, two_pics, layer
+   global zero_pics, one_pics, two_pics, currLayer, image_queue
    zero_pics = 0
    one_pics = 0
    two_pics = 0
-   layer += 1
+   currLayer += 1
    if currLayer == totLayer:
       return render_template('finished.html')
    else:
-      image_queue = imageSets[layer]
+      image_queue = utils.getUrls(imageSets[currLayer])
       return redirect('/pics')
 
 

@@ -2,6 +2,8 @@ from collections import Counter
 import json
 import urllib2
 import sys
+import copy
+import random
 
 # Login Credentials
 access_token = "1014426274.1677ed0.a695406addfa4f2c8de879708912e5a0"
@@ -48,6 +50,14 @@ def printImages(images, count):
       print images[i].toString()
       c += 1
 
+# Find most common tags
+def combineTags(images):
+   counter = Counter()
+   for i in images:
+      for t in images[i].tags:
+         counter[t] += 1
+   return counter
+
 # Take random tags and requery
 def fullExpand(tag, steps):
    masterset = dict()
@@ -56,14 +66,74 @@ def fullExpand(tag, steps):
    masterset = getMedia(tag)
    imagesets[0] = copy.deepcopy(masterset)
 
-   for i in range(0, steps):
+   for i in range(1, steps):
       thislayer = dict()
       counter = dict(combineTags(imagesets[i-1]))
 
-      for i in range(0, 20):
+      for j in range(0, 20):
          tag = random.choice(counter.keys())
          newimages = getMedia(tag)
 
+         for key in newimages:       
+            if key not in masterset:
+               masterset[key] = newimages[key]
+               thislayer[key] = newimages[key]
+
+      imagesets[i] = thislayer
+   return imagesets
+
+# Look at top percent most freqent tags
+def mostFrequent(tag, steps):
+   masterset = dict()
+   imagesets = [dict()] * (steps+1)
+
+   masterset = getMedia(tag)
+   imagesets[0] = copy.deepcopy(masterset)
+
+   for i in range(1, steps):
+      thislayer = dict()
+
+      counter = combineTags(imagesets[i-1])
+      tags = counter.most_common(20)
+
+      for tag in tags:
+         newimages = getMedia(tag[0])
+
+         for key in newimages:       
+            if key not in masterset:
+               masterset[key] = newimages[key]
+               thislayer[key] = newimages[key]
+
+      imagesets[i] = thislayer
+   return imagesets
+
+# Take tags that contain original tag
+def tagIncluded(tag, steps):
+   masterset = dict()
+   imagesets = [dict()] * (steps+1)
+
+   masterset = getMedia(tag)
+   imagesets[0] = copy.deepcopy(masterset)
+
+   for i in range(1, steps):
+      thislayer = dict()
+
+      counter = combineTags(imagesets[i-1])
+      counter = dict(counter)
+      newtags = []
+      for key in counter:
+         if str(tag) in str(key):
+            newtags.append(key)
+
+      # Search for new images with subset of those tags
+      j = 0
+      for tag in newtags:
+         j += 1
+         if j > 20:
+            break
+         newimages = getMedia(tag)
+
+         # Add new images to current layer, if not in masterset
          for key in newimages:       
             if key not in masterset:
                masterset[key] = newimages[key]
@@ -77,8 +147,11 @@ def main(args):
       sys.exit()
    if args[0] == "media":
       printImages(getMedia(args[1]), 20)
-   if args[0] == "url":
+   elif args[0] == "url":
       print getUrls(getMedia(args[1]))
+   elif args[0] == "full":
+      print len(fullExpand(args[1], int(args[2])))
+
 
 if __name__ == '__main__':
    main(sys.argv[1:])

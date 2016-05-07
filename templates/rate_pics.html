@@ -1,10 +1,9 @@
 <!doctype html>
 <title>Rating</title>
-{% if tag %}
-   <h1>Tag: {{ tag }} </h1>
-{% else %}
-   <h1>Tag: None </h1>
-{% endif %}
+   <h1>Rate the Picture!</h1>
+   <h2>Tag: {{ tag }} </h2>
+   <h2>Current Layer: {{ layer }} </h2>
+   <h2>Remaining: {{ left }} </h2>
 {% if pic %}
    <a><img src= {{ pic }} height="500"></a>
 {% else %}
