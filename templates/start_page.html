@@ -1,7 +1,12 @@
 <!doctype html>
 <title>Hello!</title>
-   <h1>Insert Tag</h1>
+   <h1>Welcome!</h1>
    <form action="/insertTag" method="POST">
-      <input name="text">
-      <input type="submit" value="Submit">
+      <h2>Insert Tag:</h2>
+      <input name="tag"><br><br>
+      <h2>Insert Layers:</h2>
+      <input name="layer"><br><br>
+      <input type="submit" name="method" value="Random Expand" style="height:40px; width:120px">
+      <input type="submit" name="method" value="Most Frequent" style="height:40px; width:120px">
+      <input type="submit" name="method" value="Tag Included" style="height:40px; width:120px">
    </form>

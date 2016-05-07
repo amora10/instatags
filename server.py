@@ -8,6 +8,9 @@ app = Flask(__name__)
 
 tag = None
 image_queue = None
+imageSets = None
+currLayer = 0
+totLayer = 0
 zero_pics = 0
 one_pics = 0
 two_pics = 0
@@ -19,20 +22,23 @@ def start_page():
 @app.route('/insertTag', methods=['POST'])
 def insert():
    if request.method == 'POST':
-      text = request.form['text']
-      if len(text) > 0:
-         global tag, zero_pics, one_pics, two_pics
-         tag = text
-         zero_pics = 0
-         one_pics = 0
-         two_pics = 0
+      global tag, zero_pics, one_pics, two_pics
+      tag = request.form['tag']
+      totLayer = request.form['layer']
+      tag = text
+      zero_pics = 0
+      one_pics = 0
+      two_pics = 0
    return redirect("/pics")
 
 @app.route('/pics')
 def pics():
-   global image_queue
+   global image_queue, imageSets
+   if imageSets == None:
+      imageSets = utils.fullExpand(tag, totLayer)
+      image_queue = utils.getUrls(imageSets[currLayer])
    if image_queue == None:
-      image_queue = utils.getUrls(utils.getMedia(tag))
+      return redirect("/results")
    pic = image_queue.pop()
    print(pic, file=sys.stderr)
    return render_template('rate_pics.html', tag=tag, pic=pic)
@@ -54,6 +60,19 @@ def rate():
 @app.route('/results')
 def results():
    return render_template('results.html', zero=zero_pics, one=one_pics, two=two_pics)
+
+@app.route('/finished')
+def finished():
+   global zero_pics, one_pics, two_pics, layer
+   zero_pics = 0
+   one_pics = 0
+   two_pics = 0
+   layer += 1
+   if currLayer == totLayer:
+      return render_template('finished.html')
+   else:
+      image_queue = imageSets[layer]
+      return redirect('/pics')
 
 
 

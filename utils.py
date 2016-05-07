@@ -31,9 +31,6 @@ def getMedia(tag):
          images[i["link"]] = Image(i)
    return images
 
-def get_pic():
-   return "https://scontent-ord1-1.cdninstagram.com/t51.2885-15/e35/13150963_603120863177545_6030527_n.jpg"
-
 def getPhotoUrl(url):
    html = urllib2.urlopen(url).read()
    parts = html.partition("<meta property=\"og:image\" content=\"")[2].partition(".jpg")
@@ -51,8 +48,29 @@ def printImages(images, count):
       print images[i].toString()
       c += 1
 
+# Take random tags and requery
+def fullExpand(tag, steps):
+   masterset = dict()
+   imagesets = [dict()] * (steps+1)
 
+   masterset = getMedia(tag)
+   imagesets[0] = copy.deepcopy(masterset)
 
+   for i in range(0, steps):
+      thislayer = dict()
+      counter = dict(combineTags(imagesets[i-1]))
+
+      for i in range(0, 20):
+         tag = random.choice(counter.keys())
+         newimages = getMedia(tag)
+
+         for key in newimages:       
+            if key not in masterset:
+               masterset[key] = newimages[key]
+               thislayer[key] = newimages[key]
+
+      imagesets[i] = thislayer
+   return imagesets
 
 def main(args):
    if len(args) < 1:
