@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang "en">
+  <head>
+    <title>WordCrunch</title>
+    <link rel=stylesheet type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style type="text/css">a {text-decoration: none}</style>
+  </head>
+  <body>
+    <div class=page>
+      <div style="position:relative">
+        <table id="nav" style="width=100%;position:relative"><tbody><tr valign="baseline">
+          <td><h1>WordCrunch</h1></td>
+          <td><a title="Intro" href="/">Home</a></td>
+          <td><a class="button" title="Build!" href="/create">Build</a></td>
+          <td><a class="button" title="Count!" href="/frequency">Counts</a></td>
+          <td><a class="button" title="Tell me..." href="/about">About</a></td>
+        </tr></tbody></table>
+      </div>
+      <hr>
+
+        {% block body %}{% endblock %}
+      
+    </div>
+  </body>

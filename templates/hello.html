@@ -1,0 +1,18 @@
+<!doctype html>
+<title>Hello from Flask</title>
+   <form action="/echo" method="POST">
+      <input name="text">
+      <input type="submit" value="Echo">
+   </form>
+   <br>
+{% if pic %}
+   <a><img src= {{ pic }} width="500"></a>
+{% else %}
+   <h1>No Image</h1>
+{% endif %}
+   <br>
+   <form action="/">
+      <input type="submit" name="0" value="0" width="50">
+      <input type="submit" name="1" value="1">
+      <input type="submit" name="2" value="2">
+   </form>

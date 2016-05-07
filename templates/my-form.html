@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+<html lang="en">
+  <body>
+    <h2>Paste Text Here:</h2>
+    <form action="." method="POST" name="Temp">
+      <textarea class="submissionfield" type="text" name="text" placeholder="Insert here."></textarea>
+      <input type="submit" name="my-form" value="Send" href="/create"> 
+      <button onclick="my_form_post()" class="tab" href="/create">Submit Text</button>
+    </form>
+    <form action="." method="POST" enctype="multipart/form-data">
+      <p><input type="file" name="file">
+        <input type="submit" value="Upload"></p>
+    </form>
+  </body>
+</html>
+{% endblock %}

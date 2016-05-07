@@ -1,0 +1,5 @@
+CLIENT ID   4f4b027e014540948cf8b6acbc88c2bb
+CLIENT SECRET  13e9e272df824a7895db6b9747f2ef31
+WEBSITE URL https://mysterious-everglades-73768.herokuapp.com/
+REDIRECT URI   https://mysterious-everglades-73768.herokuapp.com/
+SUPPORT EMAIL  amora@princeton.edu
