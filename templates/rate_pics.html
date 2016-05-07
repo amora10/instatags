@@ -1,0 +1,22 @@
+<!doctype html>
+<title>Rating</title>
+{% if tag %}
+   <h1>Tag: {{ tag }} </h1>
+{% else %}
+   <h1>Tag: None </h1>
+{% endif %}
+{% if pic %}
+   <a><img src= {{ pic }} width="500"></a>
+{% else %}
+   <h1>No Image</h1>
+{% endif %}
+   <br>
+   <form action="/rate" method="POST">
+      <input type="submit" name="rate" value="0" style="height:50px; width:50px">
+      <input type="submit" name="rate" value="1" style="height:50px; width:50px">
+      <input type="submit" name="rate" value="2" style="height:50px; width:50px">
+   </form>
+   <br>
+   <form action="/results">
+      <input type="submit" name="Done">
+   </form>
