@@ -34,9 +34,12 @@ def getMedia(tag):
    return images
 
 def getPhotoUrl(url):
-   html = urllib2.urlopen(url).read()
-   parts = html.partition("<meta property=\"og:image\" content=\"")[2].partition(".jpg")
-   image_url = parts[0] + parts[1]
+   try:
+      html = urllib2.urlopen(url).read()
+      parts = html.partition("<meta property=\"og:image\" content=\"")[2].partition(".jpg")
+      image_url = parts[0] + parts[1]
+   except URLError:
+      image_url = "https://media.licdn.com/mpr/mpr/p/5/005/099/1e1/11bcd87.jpg"
    return image_url
 
 def getUrls(images):
