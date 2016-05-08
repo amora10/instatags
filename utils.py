@@ -40,6 +40,8 @@ def getPhotoUrl(url):
       image_url = parts[0] + parts[1]
    except URLError:
       image_url = "https://media.licdn.com/mpr/mpr/p/5/005/099/1e1/11bcd87.jpg"
+   if image_url == None:
+      image_url = "https://media.licdn.com/mpr/mpr/p/5/005/099/1e1/11bcd87.jpg"
    return image_url
 
 def getUrls(images):
