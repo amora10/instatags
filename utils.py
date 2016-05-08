@@ -80,7 +80,7 @@ def fullExpand(tag, steps):
                thislayer[key] = newimages[key]
 
       imagesets[i] = thislayer
-   return imagesets
+   return limitphotos(imagesets)
 
 # Look at top percent most freqent tags
 def mostFrequent(tag, steps):
@@ -105,7 +105,7 @@ def mostFrequent(tag, steps):
                thislayer[key] = newimages[key]
 
       imagesets[i] = thislayer
-   return imagesets
+   return limitphotos(imagesets)
 
 # Take tags that contain original tag
 def tagIncluded(tag, steps):
@@ -140,7 +140,19 @@ def tagIncluded(tag, steps):
                thislayer[key] = newimages[key]
 
       imagesets[i] = thislayer
+   return limitphotos(imagesets)
+
+# Leave max 40 in each layer
+def limitphotos(imagesets):
+   for layer in range(len(imagesets)):
+      if len(imagesets[layer]) > 40:
+         newset = dict()
+         keys = random.sample(imagesets[layer], 40)
+         for pic in keys:
+            newset[pic] = imagesets[layer][pic]
+         imagesets[layer] = newset
    return imagesets
+
 
 def main(args):
    if len(args) < 1:
