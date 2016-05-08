@@ -145,9 +145,9 @@ def tagIncluded(tag, steps):
 # Leave max 40 in each layer
 def limitphotos(imagesets):
    for layer in range(len(imagesets)):
-      if len(imagesets[layer]) > 40:
+      if len(imagesets[layer]) > 20:
          newset = dict()
-         keys = random.sample(imagesets[layer], 40)
+         keys = random.sample(imagesets[layer], 20)
          for pic in keys:
             newset[pic] = imagesets[layer][pic]
          imagesets[layer] = newset
