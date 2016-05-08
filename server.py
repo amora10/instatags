@@ -32,7 +32,7 @@ def insert():
          imageSets = utils.mostFrequent(tag, totLayer)
       else:
          imageSets = utils.tagIncluded(tag, totLayer)
-      image_queue = utils.getUrls(imageSets[currLayer])
+      image_queue = imageSets[currLayer]
    return redirect("/pics")
 
 @app.route('/pics')
@@ -72,7 +72,7 @@ def finished():
    if currLayer == totLayer:
       return render_template('finished.html')
    else:
-      image_queue = utils.getUrls(imageSets[currLayer])
+      image_queue = imageSets[currLayer]
       return redirect('/pics')
 
 

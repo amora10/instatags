@@ -38,7 +38,7 @@ def getPhotoUrl(url):
       html = urllib2.urlopen(url).read()
       parts = html.partition("<meta property=\"og:image\" content=\"")[2].partition(".jpg")
       image_url = parts[0] + parts[1]
-   except URLError:
+   except urllib2.URLError:
       image_url = "https://media.licdn.com/mpr/mpr/p/5/005/099/1e1/11bcd87.jpg"
    if image_url == None:
       image_url = "https://media.licdn.com/mpr/mpr/p/5/005/099/1e1/11bcd87.jpg"
@@ -66,7 +66,7 @@ def combineTags(images):
 # Take random tags and requery
 def fullExpand(tag, steps):
    masterset = dict()
-   imagesets = [dict()] * (steps+1)
+   imagesets = [dict()] * steps
 
    masterset = getMedia(tag)
    imagesets[0] = copy.deepcopy(masterset)
@@ -85,12 +85,12 @@ def fullExpand(tag, steps):
                thislayer[key] = newimages[key]
 
       imagesets[i] = thislayer
-   return limitphotos(imagesets)
+   return [getUrls(i) for i in limitphotos(imagesets)]
 
 # Look at top percent most freqent tags
 def mostFrequent(tag, steps):
    masterset = dict()
-   imagesets = [dict()] * (steps+1)
+   imagesets = [dict()] * steps
 
    masterset = getMedia(tag)
    imagesets[0] = copy.deepcopy(masterset)
@@ -110,12 +110,12 @@ def mostFrequent(tag, steps):
                thislayer[key] = newimages[key]
 
       imagesets[i] = thislayer
-   return limitphotos(imagesets)
+   return [getUrls(i) for i in limitphotos(imagesets)]
 
 # Take tags that contain original tag
 def tagIncluded(tag, steps):
    masterset = dict()
-   imagesets = [dict()] * (steps+1)
+   imagesets = [dict()] * steps
 
    masterset = getMedia(tag)
    imagesets[0] = copy.deepcopy(masterset)
@@ -145,14 +145,14 @@ def tagIncluded(tag, steps):
                thislayer[key] = newimages[key]
 
       imagesets[i] = thislayer
-   return limitphotos(imagesets)
+   return [getUrls(i) for i in limitphotos(imagesets)]
 
 # Leave max 40 in each layer
 def limitphotos(imagesets):
    for layer in range(len(imagesets)):
-      if len(imagesets[layer]) > 20:
+      if len(imagesets[layer]) > 40:
          newset = dict()
-         keys = random.sample(imagesets[layer], 20)
+         keys = random.sample(imagesets[layer], 40)
          for pic in keys:
             newset[pic] = imagesets[layer][pic]
          imagesets[layer] = newset
@@ -167,7 +167,11 @@ def main(args):
    elif args[0] == "url":
       print getUrls(getMedia(args[1]))
    elif args[0] == "full":
-      print len(fullExpand(args[1], int(args[2])))
+      images = fullExpand(args[1], int(args[2]))
+      out = [getUrls(i) for i in images]
+      for i in out:
+         print i
+         print ""
 
 
 if __name__ == '__main__':
