@@ -22,8 +22,9 @@ def start_page():
 @app.route('/insertTag', methods=['POST'])
 def insert():
    if request.method == 'POST':
-      global tag, imageSets, image_queue, totLayer
+      global tag, imageSets, image_queue, totLayer, currLayer
       tag = request.form['tag']
+      currLayer = 0
       totLayer = int(request.form['layer'])
       func = request.form["func"]
       if func == 'Random Expand':
