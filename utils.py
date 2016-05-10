@@ -145,6 +145,7 @@ def tagIncluded(tag, steps):
                thislayer[key] = newimages[key]
 
       imagesets[i] = thislayer
+   print limitphotos(imagesets)
    return [getUrls(i) for i in limitphotos(imagesets)]
 
 # Leave max 40 in each layer
@@ -167,7 +168,7 @@ def main(args):
    elif args[0] == "url":
       print getUrls(getMedia(args[1]))
    elif args[0] == "full":
-      images = fullExpand(args[1], int(args[2]))
+      images = tagIncluded(args[1], int(args[2]))
       out = [getUrls(i) for i in images]
       for i in out:
          print i
